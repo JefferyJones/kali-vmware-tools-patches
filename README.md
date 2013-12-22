@@ -1,5 +1,5 @@
-vmware-tools-patches
-====================
+vmware-tools-patches for Kali Linux kernel 3.12
+===============================================
 
 These bash scripts allow you to easily apply multiple patches to a `VMwareTools-*.tar.gz` file.
 
@@ -13,27 +13,21 @@ To run:
 
 1. Checkout the repository:
 <pre>
-$ git clone https://github.com/rasa/vmware-tools-patches.git
+$ git clone https://github.com/offensive-security/vmware-tools-patches
 </pre>
-2. Copy your patch(es) into the appropriate directory in the `patches` directory. The file must end in `.patch`, or `.diff`. This step is optional. For example:
-<pre>
-$ cp great-new.patch vmware-tools-patches/patches/vmhgfs
-</pre>
-3. Copy a `VMwareTools-*.tar.gz` into the `vmware-tools-patches` folder:
+2. Copy a `VMwareTools-*.tar.gz` into the `vmware-tools-patches` folder:
 <pre>
 $ cp VMwareTools-*.tar.gz vmware-tools-patches/
 </pre>
-4. Apply the patches, and then run the `vmware-install.pl` installer:
+3. Apply the patches, and then build the vmware-tools:
 <pre>
 $ cd vmware-tools-patches
-$ ./untar-and-patch-and-compile.sh
+$ export VMWARE_TOOLS_PATCHES_DEBUG=1
+$ ./untar-all-and-patch.sh
+$ cd vmware-tools-distrib
+$ sed -i "s/'RUN_CONFIGURATOR', 'yesno', 'yes');/, 'RUN_CONFIGURATOR', 'yesno', 'no');/" vmware-install.pl 
+$ ./vmware-install.pl -d
+$ cd ..
+$ patch -p0 < patches/vmware-tools.patch 
+$ vmware-config-tools.pl -d --clobber-kernel-modules=pvscsi,vmblock,vmci,vmhgfs,vmmemctl,vmsync,vmxnet,vmxnet3,vsock
 </pre>
-
-If `apt-get` is installed on your system, the following packages will be installed prior to compilation:
-
-* linux-headers-$(uname -r)
-* build-essential
-* dkms
-* psmisc
-
-If `apt-get` is not installed, you will need to install these (or equivalent) packages manually, before starting.

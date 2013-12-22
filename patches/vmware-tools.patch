@@ -1,0 +1,65 @@
+
+--- /etc/init.d/vmware-tools	2013-12-22 09:57:15.065398281 -0500
++++ /etc/init.d/vmware-tools-patch	2013-12-22 09:58:42.473401159 -0500
+@@ -861,26 +861,42 @@
+ 
+ # Get the running kernel integer version
+ get_version_integer() {
+-   local IFS
+-   local v1
+-   local v2
+-   local v3
+-
+-   # Split uname -r output, trimming version annotations.
+-   #    3.2.0-53-generic -> 3 2 0
+-   #    3.10-1 -> 3 10 0
+-   #
+-   # POSIX shell uses '!' for negation during bracket expansion.
+-   # See http://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html.
+-   IFS=.
+-   set -- `uname -r`
+-   v1=${1%%[!0-9]*}; [ -z "$v1" ] && v1=0
+-   v2=${2%%[!0-9]*}; [ -z "$v2" ] && v2=0
+-   v3=${3%%[!0-9]*}; [ -z "$v3" ] && v3=0
+-
+-   kernel_version_integer "$v1" "$v2" "$v3"
++  local version_uts
++  local v1
++  local v2
++  local v3
++ 
++  version_uts=`uname -r`
++ 
++  # There is no double quote around the back-quoted expression on purpose
++  # There is no double quote around $version_uts on purpose
++  set `IFS='.'; echo $version_uts`
++  v1="$1"
++  v2="$2"
++  v3="$3"
++  # There is no double quote around the back-quoted expression on purpose
++  # There is no double quote around $v3 on purpose
++  if [ -z "$v1" ]; then
++    v1="0"
++  else
++    set `IFS='-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'; echo $v1`
++    v1="$1"
++  fi
++  if [ -z "$v2" ]; then
++    v2="0"
++  else
++    set `IFS='-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'; echo $v2`
++    v2="$1"
++  fi
++  if [ -z "$v3" ]; then
++    v3="0"
++  else
++    set `IFS='-ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz'; echo $v3`
++    v3="$1"
++  fi
++ 
++kernel_version_integer "$v1" "$v2" "$v3"
+ }
+-
+ #
+ # We exit on failure because these functions are called within the
+ # context of vmware_exec, which sets up a trap that causes exit to jump
