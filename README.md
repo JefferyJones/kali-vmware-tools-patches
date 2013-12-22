@@ -28,6 +28,7 @@ $ cd vmware-tools-distrib
 $ sed -i "s/'RUN_CONFIGURATOR', 'yesno', 'yes');/, 'RUN_CONFIGURATOR', 'yesno', 'no');/" vmware-install.pl 
 $ ./vmware-install.pl -d
 $ cd ..
+# vmware-tools patch taken from http://blog.spiderlabs.com/2013/09/installing-vmware-tools-on-kali-linux-and-some-debugging-basics.html (thanks guys!)
 $ patch -p0 < patches/vmware-tools.patch 
 $ vmware-config-tools.pl -d --clobber-kernel-modules=pvscsi,vmblock,vmci,vmhgfs,vmmemctl,vmsync,vmxnet,vmxnet3,vsock
 </pre>
