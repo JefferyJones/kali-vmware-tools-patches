@@ -39,6 +39,6 @@ $ sed -i "s/'RUN_CONFIGURATOR', 'yesno', 'yes');/, 'RUN_CONFIGURATOR', 'yesno', 
 $ ./vmware-install.pl -d
 $ cd ..
 # vmware-tools patch taken from http://blog.spiderlabs.com/2013/09/installing-vmware-tools-on-kali-linux-and-some-debugging-basics.html (thanks guys!)
-$ patch -p0 < patches/vmware-tools.patch 
+$ patch -p0 &lt; patches/vmware-tools.patch 
 $ vmware-config-tools.pl -d
 </pre>
